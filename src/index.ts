@@ -14,7 +14,20 @@ interface Window extends BrowserWindow {
 
 const windows: Window[] = [];
 
-const createDisplays = () => {
+const enableAutoLaunch = () => {
+  app.setLoginItemSettings({
+    openAtLogin: true,
+    openAsHidden: true, // macos only
+    name: app.name, // windows only
+  });
+};
+
+const makeWindowHidden = (window: Window) => {
+  window.hide();
+  window.hidden = true;
+};
+
+const createWindows = () => {
   // get all of the displays
   const displays = screen.getAllDisplays();
 
@@ -25,6 +38,9 @@ const createDisplays = () => {
       fullscreen: true,
       ...display.bounds,
     });
+
+    // hide windows on app start
+    makeWindowHidden(window);
 
     // and load the index.html of the app.
     window.loadFile(path.join(__dirname, "../src/index.html"));
@@ -41,12 +57,10 @@ const hideWindow = (window: Window) => {
     window.setFullScreen(false);
 
     setTimeout(() => {
-      window.hide();
-      window.hidden = true;
+      makeWindowHidden(window);
     }, 750);
   } else {
-    window.hide();
-    window.hidden = true;
+    makeWindowHidden(window);
   }
 };
 
@@ -95,8 +109,10 @@ const createShortcuts = () => {
     });
 };
 
-const createWindow = (): void => {
-  createDisplays();
+const createApp = (): void => {
+  enableAutoLaunch();
+
+  createWindows();
 
   createShortcuts();
 };
@@ -104,7 +120,7 @@ const createWindow = (): void => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
+app.on("ready", createApp);
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -119,7 +135,7 @@ app.on("activate", () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
+    createApp();
   }
 });
 
