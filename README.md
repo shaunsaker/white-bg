@@ -20,6 +20,12 @@ Why? In my case, I wanted extra lighting for my zoom calls but didn't want to bu
 
 ## Development
 
+### Clone the repo
+
+```
+git clone https://github.con/shaunsaker/white-bg
+```
+
 ### Install dependencies
 
 ```
