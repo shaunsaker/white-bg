@@ -36,6 +36,7 @@ const createWindows = () => {
     // Create the browser window.
     const window = new BrowserWindow({
       fullscreen: true,
+      autoHideMenuBar: true,
       ...display.bounds,
     });
 
