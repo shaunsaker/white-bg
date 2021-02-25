@@ -42,6 +42,7 @@ const hideWindow = (window: Window) => {
 
     setTimeout(() => {
       window.hide();
+      window.hidden = true;
     }, 750);
   } else {
     window.hide();
