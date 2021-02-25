@@ -35,5 +35,5 @@ yarn start
 ### Package the app
 
 ```
-yarn package
+yarn make
 ```
