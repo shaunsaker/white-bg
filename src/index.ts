@@ -50,6 +50,7 @@ const hideWindow = (window: Window) => {
 };
 
 const showWindow = (window: Window) => {
+  window.setFullScreen(true);
   window.show();
   window.hidden = false;
 };
