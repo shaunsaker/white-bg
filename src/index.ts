@@ -36,8 +36,17 @@ const createDisplays = () => {
 const isMac = os.platform() === "darwin";
 
 const hideWindow = (window: Window) => {
-  window.hide();
-  window.hidden = true;
+  // on mac, if you hide a window while fullscreen, you get a black screen of death
+  if (isMac && window.isFullScreen) {
+    window.setFullScreen(false);
+
+    setTimeout(() => {
+      window.hide();
+    }, 750);
+  } else {
+    window.hide();
+    window.hidden = true;
+  }
 };
 
 const showWindow = (window: Window) => {
