@@ -12,11 +12,11 @@ Why? In my case, I wanted extra lighting for my zoom calls but didn't want to bu
 
 ### Show all windows
 
-`Ctrl + CMD/Shift + B`
+`Ctrl + Shift + B`
 
 ### Show/hide 2nd (nth) window
 
-`Ctrl + CMD/Shift + 2`
+`Ctrl + Shift + 2`
 
 ## Development
 

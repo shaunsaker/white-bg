@@ -65,7 +65,7 @@ const createShortcuts = () => {
   });
 
   // show all windows
-  globalShortcut.register("CmdOrCtrl+Shift+B", () => {
+  globalShortcut.register("Ctrl+Shift+B", () => {
     windows.forEach((window) => {
       showWindow(window);
     });
@@ -85,7 +85,7 @@ const createShortcuts = () => {
       return 1;
     })
     .forEach((window, index) => {
-      globalShortcut.register(`CmdOrCtrl+Shift+${index + 1}`, () => {
+      globalShortcut.register(`Ctrl+Shift+${index + 1}`, () => {
         if (window.hidden) {
           showWindow(window);
         } else {
