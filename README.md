@@ -18,13 +18,21 @@ Why? In my case, I wanted extra lighting for my zoom calls but didn't want to bu
 
 `Ctrl + CMD/Shift + 2`
 
-## Run the app
+## Development
+
+### Install dependencies
+
+```
+yarn
+```
+
+### Run the app
 
 ```
 yarn start
 ```
 
-## Package the app
+### Package the app
 
 ```
 yarn package
