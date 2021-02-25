@@ -39,9 +39,6 @@ const createWindows = () => {
       ...display.bounds,
     });
 
-    // hide windows on app start
-    makeWindowHidden(window);
-
     // and load the index.html of the app.
     window.loadFile(path.join(__dirname, "../src/index.html"));
 
@@ -109,12 +106,21 @@ const createShortcuts = () => {
     });
 };
 
+const hideAllWindows = () => {
+  windows.forEach((window) => {
+    // hide windows on app start
+    makeWindowHidden(window);
+  });
+};
+
 const createApp = (): void => {
   enableAutoLaunch();
 
   createWindows();
 
   createShortcuts();
+
+  hideAllWindows();
 };
 
 // This method will be called when Electron has finished
