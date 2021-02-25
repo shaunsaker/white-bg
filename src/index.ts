@@ -1,40 +1,107 @@
-import { app, BrowserWindow } from 'electron';
-import * as path from 'path';
+import { app, BrowserWindow, globalShortcut, screen } from "electron";
+import * as path from "path";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
+if (require("electron-squirrel-startup")) {
+  // eslint-disable-line global-require
   app.quit();
 }
 
-const createWindow = (): void => {
-  // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    height: 600,
-    width: 800,
+interface Window extends BrowserWindow {
+  hidden?: boolean;
+}
+
+const windows: Window[] = [];
+
+const createDisplays = () => {
+  // get all of the displays
+  const displays = screen.getAllDisplays();
+
+  // for each display, create a new window using the same index.html (white bg)
+  displays.forEach((display) => {
+    // Create the browser window.
+    const window = new BrowserWindow({
+      fullscreen: true,
+      ...display.bounds,
+    });
+
+    // and load the index.html of the app.
+    window.loadFile(path.join(__dirname, "../src/index.html"));
+
+    windows.push(window);
+  });
+};
+
+const hideWindow = (window: Window) => {
+  window.hide();
+  window.hidden = true;
+};
+
+const showWindow = (window: Window) => {
+  window.show();
+  window.hidden = false;
+};
+
+const createShortcuts = () => {
+  // hide all windows
+  globalShortcut.register("Esc", () => {
+    windows.forEach((window) => {
+      hideWindow(window);
+    });
   });
 
-  // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, '../src/index.html'));
+  // show all windows
+  globalShortcut.register("Ctrl+Shift+B", () => {
+    windows.forEach((window) => {
+      showWindow(window);
+    });
+  });
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // sort by the x bounds
+  // show/hide individual window
+  windows
+    .sort((a, b) => {
+      const boundsA = a.getBounds();
+      const boundsB = b.getBounds();
+
+      if (boundsA.x < boundsB.x) {
+        return -1;
+      }
+
+      return 1;
+    })
+    .forEach((window, index) => {
+      globalShortcut.register(`Ctrl+Shift+${index + 1}`, () => {
+        if (window.hidden) {
+          showWindow(window);
+        } else {
+          hideWindow(window);
+        }
+      });
+    });
+};
+
+const createWindow = (): void => {
+  createDisplays();
+
+  createShortcuts();
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on("ready", createWindow);
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });
 
-app.on('activate', () => {
+app.on("activate", () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
