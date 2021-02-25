@@ -1,5 +1,6 @@
 import { app, BrowserWindow, globalShortcut, screen } from "electron";
 import * as path from "path";
+import * as os from "os";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -32,6 +33,8 @@ const createDisplays = () => {
   });
 };
 
+const isMac = os.platform() === "darwin";
+
 const hideWindow = (window: Window) => {
   window.hide();
   window.hidden = true;
@@ -51,7 +54,7 @@ const createShortcuts = () => {
   });
 
   // show all windows
-  globalShortcut.register("Ctrl+Shift+B", () => {
+  globalShortcut.register(`Ctrl+${isMac ? "CMD" : "Shift"}+B`, () => {
     windows.forEach((window) => {
       showWindow(window);
     });
@@ -71,7 +74,7 @@ const createShortcuts = () => {
       return 1;
     })
     .forEach((window, index) => {
-      globalShortcut.register(`Ctrl+Shift+${index + 1}`, () => {
+      globalShortcut.register(`Ctrl+${isMac ? "CMD" : "Shift"}+${index + 1}`, () => {
         if (window.hidden) {
           showWindow(window);
         } else {
